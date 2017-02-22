@@ -23,6 +23,8 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
         
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 300
         
         searchBar.sizeToFit()
         searchBar.delegate = self
@@ -64,8 +66,8 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if businesses != nil {
-            return businesses.count
+        if filteredBusinesses != nil {
+            return filteredBusinesses.count
         } else {
             return 0
         }
@@ -75,7 +77,7 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
         let cell = tableView.dequeueReusableCell(withIdentifier: "BusinessCell", for: indexPath) as! BusinessCell
         
         
-        cell.business = businesses[indexPath.row]
+        cell.business = filteredBusinesses[indexPath.row]
         
         return cell
         
@@ -88,14 +90,14 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
                 return
         }
         
-        filteredBusinesses = searchText.isEmpty ? businesses : businesses.filter({business in
+        self.filteredBusinesses = searchText.isEmpty ? businesses : businesses.filter({business in
             
             let foundBusiness = (business.name)!.range(of: searchText, options: .caseInsensitive) != nil
             return foundBusiness
             
         })
         
-        tableView.reloadData()
+        self.tableView.reloadData()
     }
     
     /*
